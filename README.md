@@ -14,10 +14,22 @@ This repository contains the control-system hardware associated with the work:
    
 4. The FPGA core board adopts Alientek MPSoC XCZU4EV Core Board
 
-Ps：**LCEDA** (Chinese: 嘉立创EDA)  Version used: **V2.1.64** **Alientek**(Chinese: 正点原子)
+Ps：**LCEDA** (Chinese: 嘉立创EDA)  Version used: **V2.1.64**；**Alientek**(Chinese: 正点原子)
 
 
 ## Software Part
 
 1. The FBGD convergence algorithm for the control system is written in Verilog.
 2. FPGA developed using Xilinx's Vivado 2022.1.
+   
+## License
+
+This repository is released under the GNU General Public License v3.0.
+
+The authors primarily provide this repository to support academic research, verification, and educational use related to the accompanying paper:
+
+**“First Thin-Film Lithium Tantalate Polarization Controller Enabling Reset-Free Mrad·s⁻¹ Tracking for Optical Interconnects”**
+
+If you use this repository in academic work, please cite the associated paper appropriately.
+
+For industrial collaboration or other commercial cooperation, please contact the authors.
