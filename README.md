@@ -16,11 +16,17 @@ This repository contains the control-system hardware associated with the work:
 
 Ps：**LCEDA** (Chinese: 嘉立创EDA)  Version used: **V2.1.64**；**Alientek**(Chinese: 正点原子)
 
+## Code Part
 
-## Software Part
+1. The code part contains the FBGD control algorithm and the driver code for the real-time polarization-control system.
 
-1. The FBGD convergence algorithm for the control system is written in Verilog.
-2. FPGA developed using Xilinx's Vivado 2022.1.
+2. The **ADDA Driver** folder contains the Verilog driver code for the **AD9643** ADC and **AD9744** DAC, together with the corresponding delay-alignment logic.
+
+3. The **ADC SPI Driver** folder contains the SPI register-configuration code for the **AD9643** ADC.
+
+4. The **FBGD Part** folder contains the implementation of the **FBGD control algorithm**, compiled using a mixed **SystemVerilog + Verilog** flow.
+
+5. The **FPGA Pin Constraints** folder contains the FPGA pin-constraint files for the corresponding hardware control system.
    
 ## License
 
