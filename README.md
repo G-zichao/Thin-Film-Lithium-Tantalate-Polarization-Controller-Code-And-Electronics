@@ -2,7 +2,7 @@
 
 This repository contains the control-system hardware associated with the work:
 
-**“First Thin-Film Lithium Tantalate Polarization Controller Enabling Reset-Free Mrad·s⁻¹ Tracking for Optical Interconnects”**
+**“Ultrafast Reset-Free Integrated Polarization Tracking Enabled by Thin-Film Lithium Tantalate”**
 
 ## Notes on the hardware design files
 
@@ -34,7 +34,7 @@ This repository is released under the GNU General Public License v3.0.
 
 The authors primarily provide this repository to support academic research, verification, and educational use related to the accompanying paper:
 
-**“First Thin-Film Lithium Tantalate Polarization Controller Enabling Reset-Free Mrad·s⁻¹ Tracking for Optical Interconnects”**
+**“Ultrafast Reset-Free Integrated Polarization Tracking Enabled by Thin-Film Lithium Tantalate”**
 
 If you use this repository in academic work, please cite the associated paper appropriately.
 
