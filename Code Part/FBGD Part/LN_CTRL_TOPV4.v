@@ -21,9 +21,7 @@
 
 
 module LNCTRL_TOPV4#(
-    parameter DW = 14,
-    parameter DACMAX = 8191,
-    parameter DACMIN = -8192
+    parameter DW = 14
 )(
 
     input sys_clk,
@@ -34,10 +32,6 @@ module LNCTRL_TOPV4#(
     input signed [7:0]ADC_DELAY,
     input signed [DW-1:0]INITIAL_STEP,
     input signed [DW-1:0]Kxin,Kgin,
-    input signed [DW:0]PHI1_RANGE,
-    input signed [DW:0]PHI2_RANGE,
-    input signed [DW:0]PHI3_RANGE,
-    input signed [DW:0]PHI4_RANGE,
     output  [4:0]FSM,
     output  [7:0]DELAY_CNT,
     //end debug part
@@ -73,9 +67,7 @@ module LNCTRL_TOPV4#(
     end
 
     LNCTRL_V4#(
-        .DW(DW),
-        .DACMAX(DACMAX),
-        .DACMIN(DACMIN)
+        .DW(DW)
     ) lnctrl_v2_inst(
         .sys_clk(sys_clk),
         .sys_rst_n(sys_rst_n),
@@ -88,10 +80,6 @@ module LNCTRL_TOPV4#(
         .INITIAL_STEP(INITIAL_STEP),
         .FSM(FSM),
         .DELAY_CNT(DELAY_CNT),
-        .PHI1_RANGE(PHI1_RANGE),
-        .PHI2_RANGE(PHI2_RANGE),
-        .PHI3_RANGE(PHI3_RANGE),
-        .PHI4_RANGE(PHI4_RANGE),
         //end debug port
         .da_data1(da_data1),
         .da_data2(da_data2),

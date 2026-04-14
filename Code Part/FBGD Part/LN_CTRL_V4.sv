@@ -21,9 +21,7 @@
 
 
 module LNCTRL_V4#(
-    parameter DW = 14,
-    parameter DACMAX = 8191,
-    parameter DACMIN = -8192
+    parameter DW = 14
 )(
     input sys_clk,
     input sys_rst_n,
@@ -33,10 +31,6 @@ module LNCTRL_V4#(
     input [7:0]ADC_DELAY,
     input signed [DW-1:0]Kx,Kg,
     input signed [DW-1:0]INITIAL_STEP,
-    input signed [DW:0]PHI1_RANGE,
-    input signed [DW:0]PHI2_RANGE,
-    input signed [DW:0]PHI3_RANGE,
-    input signed [DW:0]PHI4_RANGE,
     output logic [4:0]FSM,
     output logic [7:0]DELAY_CNT,
     //end debug part
@@ -96,15 +90,7 @@ module LNCTRL_V4#(
             case (FSM) // After dac1 change ,wait 16 cycles to read pbase,17:change1,18:change2,19:change3,20:change4
                 4'd0: begin 
                     if (LOCK_EN) begin
-                        if ((da_data1+INITIAL_STEP)>DACMAX) begin
-                            da_data1<=da_data1-PHI1_RANGE+INITIAL_STEP;
-                        end
-                        else if ((da_data1+INITIAL_STEP)<DACMIN) begin
-                            da_data1<=da_data1+PHI1_RANGE+INITIAL_STEP;
-                        end
-                        else begin
-                            da_data1<=da_data1+INITIAL_STEP;
-                        end
+                        da_data1<=da_data1+INITIAL_STEP;
                     end
                     else begin
                         da_data1<=da_data1;
@@ -114,76 +100,22 @@ module LNCTRL_V4#(
                     da_data4<=da_data4;
                 end
                 4'd1: begin
-
-                    if ((da_data1-INITIAL_STEP)>DACMAX) begin
-                        da_data1<=da_data1-PHI1_RANGE-INITIAL_STEP;
-                    end
-                    else if ((da_data1-INITIAL_STEP)<DACMIN) begin
-                        da_data1<=da_data1+PHI1_RANGE-INITIAL_STEP;
-                    end
-                    else begin
-                        da_data1<=da_data1-INITIAL_STEP;
-                    end
-
-                    if ((da_data2+INITIAL_STEP)>DACMAX) begin
-                        da_data2<=da_data2+INITIAL_STEP-PHI2_RANGE;
-                    end
-                    else if ((da_data2+INITIAL_STEP)<DACMIN) begin
-                        da_data2<=da_data2+INITIAL_STEP+PHI2_RANGE;
-                    end
-                    else begin
-                        da_data2<=da_data2+INITIAL_STEP;
-                    end
-                    
+                    da_data1<=da_data1-INITIAL_STEP;
+                    da_data2<=da_data2+INITIAL_STEP;
                     da_data3<=da_data3;
                     da_data4<=da_data4;
                 end
                 4'd2: begin
                     da_data1<=da_data1;
-                    if ((da_data2-INITIAL_STEP)>DACMAX) begin
-                        da_data2<=da_data2-PHI2_RANGE-INITIAL_STEP;
-                    end
-                    else if ((da_data2-INITIAL_STEP)<DACMIN) begin
-                        da_data2<=da_data2+PHI2_RANGE-INITIAL_STEP;
-                    end
-                    else begin
-                        da_data2<=da_data2-INITIAL_STEP;
-                    end
-
-                    if ((da_data3+INITIAL_STEP)>DACMAX) begin
-                        da_data3<=da_data3+INITIAL_STEP-PHI3_RANGE;
-                    end
-                    else if ((da_data3+INITIAL_STEP)<DACMIN) begin
-                        da_data3<=da_data3+INITIAL_STEP+PHI3_RANGE;
-                    end
-                    else begin
-                        da_data3<=da_data3+INITIAL_STEP;
-                    end
+                    da_data2<=da_data2-INITIAL_STEP;
+                    da_data3<=da_data3+INITIAL_STEP;
                     da_data4<=da_data4;
                 end
                 4'd3: begin
                     da_data1<=da_data1;
                     da_data2<=da_data2;
-
-                    if ((da_data3-INITIAL_STEP)>DACMAX) begin
-                        da_data3<=da_data3-PHI3_RANGE-INITIAL_STEP;
-                    end
-                    else if ((da_data3-INITIAL_STEP)<DACMIN) begin
-                        da_data3<=da_data3+PHI3_RANGE-INITIAL_STEP;
-                    end
-                    else begin
-                        da_data3<=da_data3-INITIAL_STEP;
-                    end
-
-                    if ((da_data4+INITIAL_STEP)>DACMAX) begin
-                        da_data4<=da_data4+INITIAL_STEP-PHI4_RANGE;
-                    end
-                    else if ((da_data4+INITIAL_STEP)<DACMIN) begin
-                        da_data4<=da_data4+INITIAL_STEP+PHI4_RANGE;
-                    end
-                    else begin
-                        da_data4<=da_data4+INITIAL_STEP;
-                    end
+                    da_data3<=da_data3-INITIAL_STEP;
+                    da_data4<=da_data4+INITIAL_STEP;
                 end
                 4'd4: begin//hold on
                     da_data1<=da_data1;
@@ -192,15 +124,7 @@ module LNCTRL_V4#(
                     da_data4<=da_data4; 
                 end
                 4'd5:begin //get P_base
-                    if ((da_data4-INITIAL_STEP)>DACMAX) begin
-                        da_data4<=da_data4-PHI4_RANGE-INITIAL_STEP;
-                    end
-                    else if ((da_data4-INITIAL_STEP)<DACMIN) begin
-                        da_data4<=da_data4+PHI4_RANGE-INITIAL_STEP;
-                    end
-                    else begin
-                        da_data4<=da_data4-INITIAL_STEP;
-                    end
+                    da_data4<=da_data4-INITIAL_STEP;
                     PBASE<=ad_data;
                 end
                 4'd6:begin // lock adc data
@@ -213,56 +137,19 @@ module LNCTRL_V4#(
                 4'd8:begin // lock step1 & compute phi change
                     L2x<= PBASE*L2x_buf+Phi2_step;
                     G3x<=ad_data-PBASE;
-                    //phi1 
-                    if ((da_data1-L1x)>DACMAX) begin
-                        da_data1<=da_data1-PHI1_RANGE;
-                    end
-                    else if ((da_data1-L1x)<DACMIN) begin
-                        da_data1<=da_data1+PHI1_RANGE;
-                    end
-                    else begin
-                        da_data1<=da_data1-L1x;
-                    end
+                    da_data1<=da_data1-L1x;
                 end
                 4'd9:begin 
                     L3x<= PBASE*L3x_buf+Phi3_step;
                     G4x<=ad_data-PBASE;
-                    //phi2
-                    if ((da_data2-L2x)>DACMAX) begin
-                        da_data2<=da_data2-PHI2_RANGE;
-                    end
-                    else if ((da_data2-L2x)<DACMIN) begin
-                        da_data2<=da_data2+PHI2_RANGE;
-                    end
-                    else begin
-                        da_data2<=da_data2-L2x;
-                    end
-
+                    da_data2<=da_data2-L2x;
                 end
                 4'd10:begin 
                     L4x<= PBASE*L4x_buf+Phi4_step;
-                    //phi3
-                    if ((da_data3-L3x)>DACMAX) begin
-                        da_data3<=da_data3-PHI3_RANGE;
-                    end
-                    else if ((da_data3-L3x)<DACMIN) begin
-                        da_data3<=da_data3+PHI3_RANGE;
-                    end
-                    else begin
-                        da_data3<=da_data3-L3x;
-                    end
+                    da_data3<=da_data3-L3x;
                 end
                 4'd11:begin 
-                    //phi4
-                    if ((da_data4-L4x)>DACMAX) begin
-                        da_data4<=da_data4-PHI4_RANGE;
-                    end
-                    else if ((da_data4-L4x)<DACMIN) begin
-                        da_data4<=da_data4+PHI4_RANGE;
-                    end
-                    else begin
-                        da_data4<=da_data4-L4x;
-                    end
+                    da_data4<=da_data4-L4x;
                 end
                 4'd12:begin //hold on 
                     da_data1<=da_data1;
